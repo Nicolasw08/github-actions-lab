@@ -9,8 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v3
       
@@ -24,3 +24,22 @@ jobs:
         
       - name: Run tests
         run: pytest
+        
+      - name: Create Dummy Website Index
+        run: |
+          echo "<h1>Hello from GitHub Pages!</h1><p>Deployment succeeded after all tests passed.</p><p>Workflow Run ID: ${{ github.run_id }}</p>" > index.html
+        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          commit_message: "Automated deployment by GitHub Actions run ${{ github.run_id }}"
