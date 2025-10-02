@@ -1,0 +1,30 @@
+name: Scheduled Code Quality Checks
+
+on:
+  schedule:
+   
+    - cron: '0 6 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Code Quality Check (Flake8)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install and Run Flake8 Linter
+        uses: py-actions/flake8@v2
+        with:
+          # Optional: Specify directories to check
+          path: './' 
+          # Optional: Fail the workflow if certain error codes are found
+          fail-on-error: true
